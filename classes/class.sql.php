@@ -1,18 +1,29 @@
 <?php
 
+
 class SQL {
   private $conn;
 
-  public function __construct($host, $database, $username, $password) {
+  public function __construct() {
+    try{
+    $host = $_ENV["DB_HOST"];
+    $database = $_ENV["DB_DATABASE"];
+    $username = $_ENV["DB_USERNAME"];
+    $password = $_ENV["DB_PASSWORD"];
+
+
     // Connect to the database using PDO
     $dsn = "mysql:host=$host;dbname=$database";
     $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
     $this->conn = new PDO($dsn, $username, $password, $options);
+    }catch(PDOException $e){
+      var_dump($e);
+    }
   }
 
-  public function select($table, $id) {
+  public function select($table, $id, $pk = "id") {
     // Prepare and execute the SELECT query
-    $stmt = $this->conn->prepare("SELECT * FROM $table WHERE id = :id");
+    $stmt = $this->conn->prepare("SELECT * FROM $table WHERE $pk = :id");
     $stmt->bindParam(':id', $id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -36,7 +47,8 @@ class SQL {
     return $id;
   }
 
-  public function update($table, $id, $data) {
+  public function update($table, $id, $data, $pk = "id") {
+    var_dump($data);
     // Build the named parameter placeholders and values arrays
     $set_clauses = array();
     $values = array(':id' => $id);
@@ -47,13 +59,15 @@ class SQL {
     $set_clauses_str = implode(',', $set_clauses);
 
     // Prepare and execute the UPDATE query
-    $stmt = $this->conn->prepare("UPDATE $table SET $set_clauses_str WHERE id = :id");
+    $stmt = $this->conn->prepare("UPDATE $table SET $set_clauses_str WHERE $pk = :id");
     $stmt->execute($values);
+
+    return $this->conn->lastInsertId();
   }
 
-  public function delete($table, $id) {
+  public function delete($table, $id, $pk) {
     // Prepare and execute the DELETE query
-    $stmt = $this->conn->prepare("DELETE FROM $table WHERE id = :id");
+    $stmt = $this->conn->prepare("DELETE FROM $table WHERE $pk = :id");
     $stmt->bindParam(':id', $id);
     $stmt->execute();
   }

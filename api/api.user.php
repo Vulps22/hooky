@@ -1,7 +1,5 @@
 <?php
 
-
-
 require_once('api.shared.php');
 
 class UserAPI extends SharedAPI {
@@ -14,7 +12,12 @@ class UserAPI extends SharedAPI {
     // Insert the user into the database using the SQL class
     $user_id = $this->sql->insert('user', $data);
 
-    if($user_id) $this->success($user_id);
+    $user = null;
+    if($user_id) $user = new User($user_id);
+
+
+
+    if($user) $this->success($user->getUser());
     else $this->error("Registration Failed");
 }
 
@@ -34,23 +37,52 @@ class UserAPI extends SharedAPI {
     // Check if the password is correct using the password_verify() function
     if ($user && password_verify($data['password'], $user['password'])) {
       // Send a success response
+      if($user = new User($user['id'])){
 
-      $dob = $user['dob'];
-      $age = (new DateTime($dob))->diff(new DateTime('today'))->y;
-
-      $data = [
-        "id" => $user['id'],
-        "email" => $user['email'],
-        "dob" => $user['dob'],
-        "age" => $age
-      ];
-      
-
-      return $this->success($data);
+        return $this->success($user->getUser());
+      }else{
+        return $this->error("Unable to retrieve User object");
+      }
     } else {
       // Send an error response
       return $this->error("Incorrect Password");
     }
+  }
+
+  public function save_profile(){
+    $data = $this->json();
+
+    //var_dump($data);
+
+    if(!$data) return $this->error("NODATA");
+
+    $profile = [
+      "user_id" => $data["id"],
+      "display_name" => $data["displayName"],
+      "gender" => $data["gender"],
+      "sexuality" => $data["sexuality"],
+      "bio" => $data["bio"],
+      "show_age" => $data["showAge"],
+      "body_type" => $data["bodyType"],
+      "position" => $data["position"],
+      "ethnicity" => $data["ethnicity"],
+      "status" => $data["relationshipStatus"],
+      "nsfw" => $data["acceptsNSFW"]
+    ];
+
+    $profile_id = $this->sql->update("profile", $data["id"], $profile, "user_id");
+
+    if(!$profile_id)
+    {
+      $profile_id = $this->sql->insert("profile", $profile);
+    
+    }
+
+    $user = new User($data["id"]);
+
+    if(!$user->getUserProfile()) return $this->error("An unexpected Error has occured. Please Try again Later");
+    return $this->success($user->getUser());
+    
   }
 
   public function ping(){

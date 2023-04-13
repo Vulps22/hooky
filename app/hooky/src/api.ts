@@ -4,7 +4,8 @@ class API {
   
     static user = {
       register: (data: any, success: any, error: any) => this.post('user/register', data, success, error),
-      login: (data: any, success: any, error: any) => this.post('user/login', data, success, error)
+      login: (data: any, success: any, error: any) => this.post('user/login', data, success, error),
+      saveProfile: (data: any, success: any, error: any) => this.post('user/save_profile', data, success, error)
     }
   
     static post(url: string, data: any, success: any, error: any) {

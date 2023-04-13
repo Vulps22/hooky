@@ -1,11 +1,8 @@
 <?php
 header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
 header('Access-Control-Allow-Origin: *');
-require_once('classes/class.sql.php');
 
-require_once('router.php');
-require_once('api/api.shared.php');
-require_once('api/api.user.php');
+require_once('include.php');
 
 try{
 
@@ -18,16 +15,27 @@ try{
 	  }
 	  
 
-$router = new Router();
+	  // Allow access to the /assets directory
+	if(preg_match('/\.(?:png|jpg|jpeg|gif|ico)$/', $_SERVER["REQUEST_URI"])) {
+		return false;    // serve the requested resource as-is.
+	}
 
-$router->add_route('GET', '/ping', 'UserAPI@ping');
 
-// Register routes for the AppAPI controller
-$router->add_route('POST', '/user/register', 'UserAPI@register');
-$router->add_route('POST', '/user/login', 'UserAPI@login');
+	//Load Environment Variables
+	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+	$dotenv->load();
 
-// Handle the incoming request using the router
-$router->handle_request();
+	$router = new Router();
+
+	$router->add_route('GET', '/ping', 'UserAPI@ping');
+
+	// Register routes for the UserAPI controller
+	$router->add_route('POST', '/user/register', 'UserAPI@register');
+	$router->add_route('POST', '/user/login', 'UserAPI@login');
+	$router->add_route('POST', '/user/save_profile', 'UserAPI@save_profile');
+
+	// Handle the incoming request using the router
+	$router->handle_request();
 
 }catch(Exception $err) {
 	var_dump($err->message);

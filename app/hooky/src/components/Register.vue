@@ -34,6 +34,7 @@
   <script lang="ts">
   import { defineComponent } from 'vue';
   import API from '@/api';
+import { useUserStore } from '@/stores/user';
 
   
   export default defineComponent({
@@ -74,7 +75,12 @@
         };
 
         API.user.register(formData, (data: any) => {
-            console.log(data);
+           
+             // set user in store
+        const userStore = useUserStore();
+        userStore.setUser(data);
+        console.log(userStore.user);
+         this.$emit("registered");
         }, (error: any) => {
             alert("Registration Failed");
             console.log(error.message);

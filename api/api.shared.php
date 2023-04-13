@@ -5,11 +5,8 @@ class SharedAPI {
 
   public function __construct() {
       // Initialize the SQL class with your database configuration
-      $host = 'localhost';
-      $database = 'hooky';
-      $username = 'hooky_dev';
-      $password = 'i)]5UdDqeVg@]UnF';
-      $this->sql = new SQL($host, $database, $username, $password);
+      
+      $this->sql = new SQL();
   }
 
   public function get() {
