@@ -48,7 +48,6 @@ class SQL {
   }
 
   public function update($table, $id, $data, $pk = "id") {
-    var_dump($data);
     // Build the named parameter placeholders and values arrays
     $set_clauses = array();
     $values = array(':id' => $id);
@@ -62,14 +61,18 @@ class SQL {
     $stmt = $this->conn->prepare("UPDATE $table SET $set_clauses_str WHERE $pk = :id");
     $stmt->execute($values);
 
-    return $this->conn->lastInsertId();
+    return $stmt->rowCount() > 0;
   }
 
-  public function delete($table, $id, $pk) {
+  public function delete($table, $id, $pk = 'id') {
     // Prepare and execute the DELETE query
     $stmt = $this->conn->prepare("DELETE FROM $table WHERE $pk = :id");
     $stmt->bindParam(':id', $id);
     $stmt->execute();
+
+    return $stmt->rowCount() > 0;
+
+
   }
 
   public function query($query, $data) {

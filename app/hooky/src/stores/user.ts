@@ -7,8 +7,24 @@ interface User {
     created: Date;
     updated: Date;
     termsAccepted: Date;
+    profile: Profile;
 
 }
+
+interface Profile {
+  user_id: string;
+  display_name: string;
+  age: number;
+  gender: string;
+  sexuality: string;
+  bio: string;
+  position: string;
+  ethnicity: string;
+  status: string;
+  showNSFW: boolean;
+  images: string[];
+}
+
 
 export const useUserStore = defineStore('user', () => ({
   // Define initial state for user store

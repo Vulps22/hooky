@@ -10,8 +10,9 @@ class User {
        
         $this->user = $this->sql->select("user", $id);
 
-        if(!$this->user) return false;
-        else return true;
+        if(!$this->user){
+            throw new Exception('Invalid User ID');
+        }
     }
 
     public function getUser(){
