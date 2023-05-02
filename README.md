@@ -21,10 +21,20 @@ To start with you're going to require [XAMPP](https://www.apachefriends.org/down
 
 When you have them installed, Clone the repo into your XAMPP's htdocs folder and launch Xampp. Make sure to start Apache and MySQL before continuing
 
-find the file <still to be committed> and import it into the PHPMyAdmin (click the 'admin' button for MySQL on XAMPP) interface to create a clone of the database structure (no data)
+find the file SQL Structure and import it into the PHPMyAdmin (click the 'admin' button for MySQL on XAMPP) interface to create a clone of the database structure (no data)
 
 You're going to want to run `composer install` and let it install any dependencies.
 
 Then you will need to use `cd app/hooky` and run `npm install`
 
 When that's complete you should be able to launch the front end in development with `npm run dev`
+
+##Configuration
+
+In order to make Queries to the database you will need to configure environment variables.
+
+Find the file called `.env-template` and rename it to `.env`. Then fill in the details under `Database Configuration` to match your local copy of the database.
+
+#Help
+
+If you have any queries or need assistance setting up your environment contact Vulps on the [Discord](https://discord.gg/Qh9JW7Mx) server.
