@@ -1,9 +1,6 @@
 @import './base.css';
 
 #app {
-  margin: 0 auto;
-  padding: 2rem;
-  margin-top: 3%;
   font-weight: normal;
 }
 
@@ -26,9 +23,8 @@ a,
     place-items: center;
   }
 
-  #app {
+  #app-base {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
-    padding: 0 2rem;
   }
 }

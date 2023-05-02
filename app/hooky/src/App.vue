@@ -7,15 +7,24 @@ import { RouterLink, RouterView } from 'vue-router'
     <Header />
     <br>
     <br>
-    <router-view />
+    <div id="app-base">
+      <div>
+        <NavBar />
+      </div>
+      <div>
+        <router-view />
+      </div>
+    </div>
 </template>
 
 <script lang="ts">
 import Header from "./components/Header.vue";
+import NavBar from './components/NavBar.vue';
 
 export default {
   components: {
     Header,
+    NavBar,
   },
 };
 </script>
