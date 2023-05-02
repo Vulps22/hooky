@@ -1,0 +1,233 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: May 02, 2023 at 07:46 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Database: `hooky`
+--
+CREATE DATABASE IF NOT EXISTS `hooky` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `hooky`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `favourite`
+--
+
+CREATE TABLE `favourite` (
+  `user_id` int(11) NOT NULL,
+  `target_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `image`
+--
+
+CREATE TABLE `image` (
+  `id` int(11) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `last_updated_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `sender` int(11) NOT NULL,
+  `target` int(11) NOT NULL,
+  `text` text DEFAULT NULL,
+  `image_id` int(11) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `last_updated_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message_image`
+--
+
+CREATE TABLE `message_image` (
+  `message_id` int(11) NOT NULL,
+  `image_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `profile`
+--
+
+CREATE TABLE `profile` (
+  `user_id` int(11) NOT NULL,
+  `display_name` varchar(50) NOT NULL,
+  `gender` enum('male','female','non-binary','transgender','other') NOT NULL,
+  `sexuality` enum('gay','straight','bisexual','queer','other') NOT NULL,
+  `bio` text DEFAULT NULL,
+  `show_age` tinyint(1) DEFAULT 1,
+  `height` int(11) DEFAULT NULL,
+  `weight` int(11) DEFAULT NULL,
+  `body_type` enum('hidden','toned','average','large','muscular','slim','stocky') DEFAULT NULL,
+  `position` enum('hidden','top','vers top','vers','vers bottom','bottom') DEFAULT NULL,
+  `ethnicity` varchar(50) DEFAULT NULL,
+  `status` enum('single','in a relationship','engaged','married','it''s complicated','open relationship','widowed','divorced','separated','other') DEFAULT NULL,
+  `nsfw` tinyint(1) DEFAULT 0,
+  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `last_updated_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `dob` date NOT NULL,
+  `terms_accepted` date NOT NULL,
+  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `last_updated_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_image`
+--
+
+CREATE TABLE `user_image` (
+  `user_id` int(11) NOT NULL,
+  `image_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `favourite`
+--
+ALTER TABLE `favourite`
+  ADD PRIMARY KEY (`user_id`,`target_id`),
+  ADD KEY `target_id` (`target_id`);
+
+--
+-- Indexes for table `image`
+--
+ALTER TABLE `image`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sender` (`sender`),
+  ADD KEY `target` (`target`);
+
+--
+-- Indexes for table `message_image`
+--
+ALTER TABLE `message_image`
+  ADD PRIMARY KEY (`message_id`,`image_id`),
+  ADD KEY `image_id` (`image_id`);
+
+--
+-- Indexes for table `profile`
+--
+ALTER TABLE `profile`
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_image`
+--
+ALTER TABLE `user_image`
+  ADD PRIMARY KEY (`user_id`,`image_id`),
+  ADD KEY `image_id` (`image_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `image`
+--
+ALTER TABLE `image`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `favourite`
+--
+ALTER TABLE `favourite`
+  ADD CONSTRAINT `favourite_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `favourite_ibfk_2` FOREIGN KEY (`target_id`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `message`
+--
+ALTER TABLE `message`
+  ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`target`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `message_image`
+--
+ALTER TABLE `message_image`
+  ADD CONSTRAINT `message_image_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `message` (`id`),
+  ADD CONSTRAINT `message_image_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`);
+
+--
+-- Constraints for table `profile`
+--
+ALTER TABLE `profile`
+  ADD CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `user_image`
+--
+ALTER TABLE `user_image`
+  ADD CONSTRAINT `user_image_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `user_image_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`);
+COMMIT;
