@@ -14,7 +14,6 @@ require_once('api/api.user.php');
 /* Classes */
 require_once("classes/class.sql.php");
 require_once("classes/class.user.php");
-
-
+require_once("classes/class.message.php");
 
 ?>
