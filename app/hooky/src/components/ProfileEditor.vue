@@ -139,7 +139,7 @@ export default defineComponent({
       console.log(profileData);
       API.user.saveProfile(profileData, (data: any) => {
         console.log(data);
-        
+        this.$router.push('/home'); // Navigate to /home
       }, (err: any) => {
         console.log(err);
       })

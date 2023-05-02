@@ -41,6 +41,7 @@ export default defineComponent({
         const userStore = useUserStore();
         userStore.setUser(data);
         if(!data.profile) this.$emit("no-profile");
+        else this.$router.push('/home');
       },
       (err: any) => {
         console.log(err);
