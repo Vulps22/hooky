@@ -100,6 +100,26 @@ class SQL {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result;
   }
+
+  public function count($table, $conditions = array()) {
+    // Build the WHERE clause based on the conditions
+    $where_clauses = array();
+    $values = array();
+    foreach ($conditions as $key => $value) {
+        $where_clauses[] = "$key = :$key";
+        $values[":$key"] = $value;
+    }
+    $where_clause = '';
+    if (!empty($where_clauses)) {
+        $where_clause = 'WHERE ' . implode(' AND ', $where_clauses);
+    }
+
+    // Prepare and execute the COUNT query
+    $stmt = $this->conn->prepare("SELECT COUNT(*) AS count FROM $table $where_clause");
+    $stmt->execute($values);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['count'];
+  }
   
 }
 ?>

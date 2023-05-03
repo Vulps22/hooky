@@ -1,33 +1,13 @@
 <?php
 
-    use PHPUnit\Framework\TestCase;
-
-    class UserTest extends TestCase
+    class UserTest extends TestBase
     {
-        private $sql;
-        private $testUserId;
         private $testData = [
             'email' => 'jane@example.com',
             'password' => 'password',
             'dob' => '1993-03-24',
             'terms_accepted' => '0000-00-00'
         ];
-
-        protected function setUp(): void
-        {
-            $this->sql = new SQL();
-            $this->testUserId = null;
-        }
-
-        protected function tearDown(): void
-        {
-            if ($this->testUserId !== null) {
-                $this->sql->delete('profile', $this->testUserId, 'user_id');
-                $this->sql->delete('user', $this->testUserId, 'id');
-                
-
-            }
-        }
 
         public function testConstructWithValidId()
         {
@@ -48,8 +28,6 @@
 
             // Instantiate User with invalid ID
             $user = new User(1);
-
-            
         }
 
         public function testGetUser()
@@ -85,6 +63,8 @@
             // Insert a test user
             $this->testUserId = $this->sql->insert('user', $this->testData);
 
+            $this->assertIsNumeric($this->testUserId, "Test User was not inserted");
+
             // Insert a test profile for the user
             $profileData = [
                 'user_id' => $this->testUserId,
@@ -111,23 +91,23 @@
             $profile = $user->getUserProfile();
 
             // Create a new array with only the expected fields
-            $expectedProfile = [
-                'user_id' => $profileData['user_id'],
-                'display_name' => $profileData['display_name'],
-                'gender' => $profileData['gender'],
-                'sexuality' => $profileData['sexuality'],
-                'bio' => $profileData['bio'],
-                'show_age' => $profileData['show_age'],
-                'height' => $profileData['height'],
-                'weight' => $profileData['weight'],
-                'body_type' => $profileData['body_type'],
-                'position' => $profileData['position'],
-                'ethnicity' => $profileData['ethnicity'],
-                'status' => $profileData['status'],
-                'nsfw' => $profileData['nsfw'],
+            $actualProfile = [
+                'user_id' => $profile['user_id'],
+                'display_name' => $profile['display_name'],
+                'gender' => $profile['gender'],
+                'sexuality' => $profile['sexuality'],
+                'bio' => $profile['bio'],
+                'show_age' => $profile['show_age'],
+                'height' => $profile['height'],
+                'weight' => $profile['weight'],
+                'body_type' => $profile['body_type'],
+                'position' => $profile['position'],
+                'ethnicity' => $profile['ethnicity'],
+                'status' => $profile['status'],
+                'nsfw' => $profile['nsfw'],
             ];
 
-            $this->assertEquals($profileData, $expectedProfile);
+            $this->assertEquals($profileData, $actualProfile);
         }
 
         public function testGetUserProfileWithInvalidProfile()

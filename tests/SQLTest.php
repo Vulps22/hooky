@@ -1,30 +1,13 @@
 <?php
-
-    use PHPUnit\Framework\TestCase;
-
-    class SQLTest extends TestCase
+    class SQLTest extends TestBase
     {
-        private $sql;
-        private $testUserId;
+
         private $testData = [
             'email' => 'jane@example.com',
             'password' => 'password',
             'dob' => '1993-03-24',
             'terms_accepted' => '0000-00-00'
         ];
-
-        protected function setUp(): void
-        {
-            $this->sql = new SQL();
-            $this->testUserId = null;
-        }
-
-        protected function tearDown(): void
-        {
-            if ($this->testUserId !== null) {
-                $this->sql->delete('user', $this->testUserId, 'id');
-            }
-        }
 
         public function testSelect()
         {
