@@ -101,6 +101,7 @@
 import API from '@/api';
 import { useUserStore } from '@/stores/user';
 import { defineComponent } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'ProfileEditor',
