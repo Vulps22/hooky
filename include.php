@@ -16,4 +16,7 @@ require_once("classes/class.sql.php");
 require_once("classes/class.user.php");
 require_once("classes/class.message.php");
 
+/* Test clases */
+require_once("tests/TestBase.php");
+
 ?>

@@ -1,11 +1,7 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
-class MessageTest extends TestCase
+class MessageTest extends TestBase
 {
-
-    private $sql;
     private $testSenderId;
     private $testTargetId;
     private $testMessageId;
@@ -33,6 +29,8 @@ class MessageTest extends TestCase
 
         $this->testTargetId = $this->sql->insert('user', $testTarget);
         $this->testSenderId = $this->sql->insert('user', $testSender);
+
+        parent::setUp();
     }
 
     protected function tearDown(): void
@@ -40,6 +38,8 @@ class MessageTest extends TestCase
         $this->sql->delete('message', $this->testMessageId, 'id');
         $this->sql->delete('user', $this->testSenderId, 'id');
         $this->sql->delete('user', $this->testTargetId, 'id');
+
+        parent::tearDown();
     }
 
     public function testSave()
